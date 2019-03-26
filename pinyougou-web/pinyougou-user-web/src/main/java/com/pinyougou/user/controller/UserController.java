@@ -53,6 +53,7 @@ public class UserController {
         return false;
     }
 
+    //查询用户信息
     @GetMapping("/findUserInfo")
     public List<User> findUserInfo(HttpServletRequest request) {
         try {
@@ -62,5 +63,17 @@ public class UserController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //更新用户信息
+    @PostMapping("/update")
+    public boolean update(@RequestBody User user) {
+        try {
+            userService.update(user);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }
