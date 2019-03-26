@@ -9,7 +9,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
     /** 分页查询(查询条件) */
     $scope.search = function(page, rows){
         baseService.findByPage("/seller/findByPage", page,
-			rows, $scope.searchEntity)
+            rows, $scope.searchEntity)
             .then(function(response){
                 /** 获取分页查询结果 */
                 $scope.dataList = response.data.rows;
@@ -29,23 +29,15 @@ app.controller('sellerController', function($scope, $controller, baseService){
         // alert(sellerId + "==" + status);
         baseService.sendGet("/seller/updateStatus?sellerId="
             + sellerId + "&status=" + status).then(function (response) {
-                // 获取响应数据
-                if (response.data){
-                    // 操作成功
-                    $scope.reload();
-                }else{
-                    alert("操作失败！");
-                }
+            // 获取响应数据
+            if (response.data){
+                // 操作成功
+                $scope.reload();
+            }else{
+                alert("操作失败！");
+            }
         });
     };
-
-
-
-
-
-
-
-
 
     /** 添加或修改 */
     $scope.saveOrUpdate = function(){
