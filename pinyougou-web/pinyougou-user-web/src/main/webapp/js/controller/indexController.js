@@ -9,4 +9,12 @@ app.controller('indexController', function($scope, baseService){
         });
     };
 
+    /** 查询订单  */
+    $scope.findOrder = function () {
+        baseService.sendGet("/order/findOrder").then(function (response) {
+            $scope.orderItems = response.data.orderItems;
+            $scope.orders = response.data.orders;
+        })
+    }
+
 });

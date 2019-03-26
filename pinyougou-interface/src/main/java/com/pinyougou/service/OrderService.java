@@ -5,6 +5,8 @@ import com.pinyougou.pojo.PayLog;
 
 import java.util.List;
 import java.io.Serializable;
+import java.util.Map;
+
 /**
  * OrderService 服务接口
  * @date 2019-02-27 10:03:32
@@ -38,4 +40,7 @@ public interface OrderService {
 
     /** 支付成功，业务处理 */
 	void updateStatus(String outTradeNo, String transactionId);
+
+	/* 查询用户订单 */
+	List<Order> findOrderByUserId(String loginName);
 }

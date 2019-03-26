@@ -1,5 +1,5 @@
 /** 定义控制器层 */
-app.controller('sellerController', function($scope, $controller, baseService){
+app.controller('sellerController', function($scope, $controller,$location, baseService){
 
     /** 指定继承baseController */
     $controller('baseController',{$scope:$scope});
@@ -19,12 +19,50 @@ app.controller('sellerController', function($scope, $controller, baseService){
     };
 
 
+/** 查询商家信息 */
+    $scope.findSeller = function () {
+        baseService.sendGet("/seller/findSeller").then(function (response) {
+            $scope.seller = response.data;
+        })
+    };
+
+
+    $scope.update = function(){
+        /** 发送post请求 */
+        baseService.sendPost("/seller/update", $scope.seller)
+            .then(function(response){
+                if (response.data){
+
+                    alert("修改成功")
+                }else{
+                    alert("入驻失败！");
+                }
+            });
+    };
 
 
 
-
-
-
+    /** 修改密码 **/
+        $scope.updatePassword = function () {
+        //  修改密码,判断密码是否一致
+        if ($scope.okPassword && $scope.seller.password == $scope.okPassword){
+            // 发送异步请求
+            baseService.sendPost("/seller/updatePassword" ,$scope.seller).then(function(response){
+                // 获取响应数据
+                if (response.data){
+                    alert("修改成功！");
+                    // 清空表单数据
+                    $scope.seller = {};
+                    $scope.okPassword = "";
+                    $scope.password = "";
+                }else{
+                    alert("修改失败！");
+                }
+            });
+        }else{
+            alert("两次密码不一致！");
+        }
+    };
 
 
 

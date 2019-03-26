@@ -13,7 +13,6 @@ import java.util.List;
  * @version 1.0
  */
 public interface ItemCatMapper extends Mapper<ItemCat>{
-
     @Select("SELECT * FROM `tb_item_cat` WHERE parent_id = #{parentId}")
     List<ItemCat> findItemCatByParentId(Long parentId);
 }

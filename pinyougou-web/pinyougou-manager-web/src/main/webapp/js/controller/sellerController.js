@@ -46,6 +46,7 @@ app.controller('sellerController', function($scope, $controller, baseService){
 
 
 
+
     /** 添加或修改 */
     $scope.saveOrUpdate = function(){
         var url = "save";
