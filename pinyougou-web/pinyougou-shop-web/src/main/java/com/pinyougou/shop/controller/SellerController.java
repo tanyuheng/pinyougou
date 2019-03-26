@@ -68,7 +68,7 @@ public class SellerController {
         return false;
     }
 
-    /** 修改商家资料 */
+    /** 修改商家密码 */
     @PostMapping("/updatePassword")
     public boolean updatePassword(@RequestBody Seller seller, HttpServletRequest request){
         try{

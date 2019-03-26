@@ -218,7 +218,7 @@ $(function(){
 								<!--order1-->
                                 <div class="choose-title" ng-repeat="order in orders">
                                     <label data-toggle="checkbox" class="checkbox-pretty ">
-                                           <input type="checkbox" checked="checked"><span>2017-02-11 11:59　订单编号：7867473872181848  店铺：哇哈哈 <a>和我联系</a></span>
+                                           <input type="checkbox" checked="checked"><span>{{order.createTime}}　订单编号：{{order.orderId}}  店铺：哇哈哈 <a>和我联系</a></span>
                                      </label>
 									  <a class="sui-btn btn-info share-btn">分享</a>
                                 </div>

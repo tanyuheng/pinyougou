@@ -6,7 +6,6 @@ import com.pinyougou.pojo.OrderItem;
 import com.pinyougou.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.List;
