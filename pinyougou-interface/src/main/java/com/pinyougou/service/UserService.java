@@ -36,4 +36,9 @@ public interface UserService {
 
 	/** 检验短信验证码 */
 	boolean checkSmsCode(String phone, String code);
+
+
+	boolean safe(User user);
+
+    User selectPhone(String uername);
 }

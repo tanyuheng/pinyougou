@@ -100,10 +100,10 @@ public class UserServiceImpl implements UserService {
             params.put("phone", phone);
             params.put("signName", signName);
             params.put("templateCode", templateCode);
-            params.put("templateParam", "{'number':'"+ code +"'}");
+            params.put("templateParam", "{'code':'"+ code +"'}");
             // 调用短信接口
             String content = httpClientUtils.sendPost(smsUrl, params);
-            System.out.println(content);
+            System.out.println("content:"+content);
 
             // 3. 如果发送成功，把验证码存储到Redis数据库
             Map map = JSON.parseObject(content, Map.class);
@@ -128,5 +128,21 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ex);
         }
     }
-
+    public   boolean safe(User user){
+        try {
+         String username=   user.getUsername();
+          String password= DigestUtils.md5Hex(user.getPassword());
+         userMapper.updatePassword(username,password);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public User selectPhone(String username){
+        try {
+       return   userMapper.selectPhone(username);
+        } catch (Exception e) {
+            throw  new RuntimeException(e);
+        }
+    }
 }
