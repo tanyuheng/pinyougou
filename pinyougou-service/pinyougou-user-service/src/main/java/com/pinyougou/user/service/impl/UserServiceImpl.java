@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
-        try{
+        try {
             // 密码需要MD5加密 commons-codec-xxx.jar
             user.setPassword(DigestUtils.md5Hex(user.getPassword()));
             // 创建时间
@@ -49,14 +50,14 @@ public class UserServiceImpl implements UserService {
             // 修改时间
             user.setUpdated(user.getCreated());
             userMapper.insertSelective(user);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
     public void update(User user) {
-
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
@@ -84,12 +85,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    /** 发送短信验证码 */
-    public boolean sendSmsCode(String phone){
-        try{
+    /**
+     * 发送短信验证码
+     */
+    public boolean sendSmsCode(String phone) {
+        try {
             // 1. 生成6位随机数字的验证码
-            String code = UUID.randomUUID().toString().replaceAll("-","")
-                    .replaceAll("[a-zA-Z]","").substring(0,6);
+            String code = UUID.randomUUID().toString().replaceAll("-", "")
+                    .replaceAll("[a-zA-Z]", "").substring(0, 6);
             System.out.println("code: " + code);
 
             // 2. 调用短信发送接口
@@ -100,32 +103,46 @@ public class UserServiceImpl implements UserService {
             params.put("phone", phone);
             params.put("signName", signName);
             params.put("templateCode", templateCode);
-            params.put("templateParam", "{'number':'"+ code +"'}");
+            params.put("templateParam", "{'number':'" + code + "'}");
             // 调用短信接口
             String content = httpClientUtils.sendPost(smsUrl, params);
             System.out.println(content);
 
             // 3. 如果发送成功，把验证码存储到Redis数据库
             Map map = JSON.parseObject(content, Map.class);
-            boolean success = (boolean)map.get("success");
-            if (success){
+            boolean success = (boolean) map.get("success");
+            if (success) {
                 // 把验证码存储到Redis数据库，有效期90秒
                 redisTemplate.boundValueOps(phone).set(code, 90, TimeUnit.SECONDS);
             }
             return true;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    /** 检验短信验证码 */
-    public boolean checkSmsCode(String phone, String code){
-        try{
+    /**
+     * 检验短信验证码
+     */
+    public boolean checkSmsCode(String phone, String code) {
+        try {
             // 从Redis数据库获取短信验证码
-            String oldCode = (String)redisTemplate.boundValueOps(phone).get();
+            String oldCode = (String) redisTemplate.boundValueOps(phone).get();
             return oldCode != null && oldCode.equals(code);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<User> findUserInfo(String username) {
+        try {
+            Example example = new Example(User.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username", username);
+            return userMapper.selectByExample(example);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
