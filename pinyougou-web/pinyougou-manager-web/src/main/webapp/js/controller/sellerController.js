@@ -7,7 +7,7 @@ app.controller('sellerController', function ($scope, $controller, baseService) {
     /** 查询条件对象 */
     $scope.searchEntity = {name: '', nickName: '', status: ['']};
 
-    $scope.status = {};
+    $scope.status = ['未审核','已审核','审核未通过','关闭'];
     /** 分页查询(查询条件) */
     $scope.search = function (page, rows) {
         baseService.findByPage("/seller/findByPage", page,

@@ -83,7 +83,7 @@
 			                      <tbody>
 			                          <tr ng-repeat=" entity in dataList">
 			                              <td><input  type="checkbox"></td>
-				                          <td>{{entity.sellerId}}</td> <!---->
+				                          <td>{{entity.sellerId}}</td> <!--商家ID-->
 									      <td>{{entity.name}}</td><!--公司名称-->
 									      <td>{{entity.nickName}}</td><!--店铺名称-->
 									      <td>{{entity.linkmanName}}</td><!--联系人名称-->
@@ -97,22 +97,14 @@
 													  data-toggle="modal" data-target="#sellerModal">详情</button>
 										  </td>
 			                          </tr>
-
 			                      </tbody>
 			                  </table>
 			                  <!--数据列表/-->
 							<tm-pagination conf="paginationConf"/>
-							  
-							 
                         </div>
                         <!-- 数据表格 /-->
-
                      </div>
                     <!-- /.box-body -->
-                    
-	          
-					    
-                                
 <!-- 商家详情 -->
 <div class="modal fade" id="sellerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" >
@@ -223,9 +215,7 @@
 			     	</table>					
 			    </div>
   			    </div> 			
-           <!-- 选项卡结束 -->          
-			
-			
+           <!-- 选项卡结束 -->
 		</div>
 		<div class="modal-footer">						
 			<button class="btn btn-success"
@@ -243,7 +233,5 @@
 	</div>
 </div>
 
-
 </body>
-
 </html>
