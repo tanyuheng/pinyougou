@@ -15,31 +15,7 @@ app.controller('baseController', function ($scope,$http,baseService     ) {
     };
     /** 重新加载数据方法 */
     $scope.reload = function () {
-        $scope.search($scope.paginationConf.currentPage,
-            $scope.paginationConf.itemsPerPage);
-    };
-
-    // 定义ids数组
-    $scope.ids = [];
-
-    // 为checkbox绑定点击事件封装用户选中的id
-    $scope.updateSelection = function ($event, id) {
-        // $event事件对象 (判断checkbox是否选中)
-        //alert($event.target); // 获取dom元素
-        if ($event.target.checked) {
-            // 选中了checkbox
-            // 往数组中添加元素
-            $scope.ids.push(id);
-        } else {
-            // 没有选中checkbox
-            // 从数据中删除元素
-            // 获取一个元素在数组中的索引号
-            var idx = $scope.ids.indexOf(id);
-            // 删除元素
-            // 第一个参数：索引号
-            // 第二个参数：删除的个数
-            $scope.ids.splice(idx, 1);
-        }
+        $scope.findAddressByUser();
     };
 
     /** 提取数组中json某个属性，返回拼接的字符串(逗号分隔) */

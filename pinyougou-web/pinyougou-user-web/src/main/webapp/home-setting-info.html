@@ -14,11 +14,12 @@
     <script src="/js/controller/baseController.js"></script>
     <script src="/js/controller/userController.js"></script>
     <script src="/js/controller/indexController.js"></script>
+    <script src="/js/controller/addressController.js"></script>
     <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
 </head>
 
 <body ng-app="pinyougou"
-      ng-controller="userController"
+      ng-controller="addressController"
       ng-init="loadUsername();findUserInfo();findProvince();findCitie();findArea()">
 <!-- 头部栏位 -->
 <!--页面顶部-->
@@ -278,13 +279,13 @@
                                                 <select class="form-control" id="province1"
                                                         ng-model="entity.address.province"
                                                         ng-options="c.id as c.province for c in provinceList"
-                                                        class="form-control"></select>
+                                                        ></select>
                                             </div>
                                             <div class="form-group area">
                                                 <select class="form-control" id="city1"
                                                         ng-model="entity.address.city"
                                                         ng-options="c.id as c.city for c in citieList"
-                                                        class="form-control"></select>
+                                                       ></select>
                                             </div>
                                             <div class="form-group area">
                                                 <select class="form-control" id="district1"
@@ -323,7 +324,6 @@
                                         <button type="submit" class="sui-btn btn-primary"
                                                 ng-click="saveOrUpdate();">保存
                                         </button>
-                                        {{entity}}
                                     </div>
                                 </div>
                             </form>
