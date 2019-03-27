@@ -13,13 +13,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *  购物车服务接口实现类
- *
- * @author lee.siu.wah
- * @version 1.0
- * <p>File Created at 2019-03-19<p>
- */
 @Service(interfaceName = "com.pinyougou.service.CartService")
 @Transactional
 public class CartServiceImpl implements CartService {
@@ -29,13 +22,6 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    /**
-     * 添加SKU商品添加到购物车
-     * @param carts 购物车集合
-     * @param itemId SKU的id
-     * @param num 购买数量
-     * @return 修改后的购物车集合
-     */
     public List<Cart> addItemToCart(List<Cart> carts, Long itemId, Integer num){
         try{
             // 1. 根据itemId到tb_item表查询一行数据
@@ -58,7 +44,7 @@ public class CartServiceImpl implements CartService {
                 List<OrderItem> orderItems = new ArrayList<>();
                 // 创建购物车中的商品对象
                 OrderItem orderItem = createOrderItem(item, num);
-                
+
                 // 添加用户购买的商品
                 orderItems.add(orderItem);
                 // 设置商家的购物车集合
@@ -154,9 +140,9 @@ public class CartServiceImpl implements CartService {
      * @param userId 用户id
      * @return 购物车集合
      */
-    public List<Cart> findCartRedis(String userId){
+    public List<Cart> findCartRedis(String userId, String prefix){
         try{
-            List<Cart> carts = (List<Cart>)redisTemplate.boundValueOps("cart_" + userId).get();
+            List<Cart> carts = (List<Cart>)redisTemplate.boundValueOps(prefix + userId).get();
             if (carts == null){
                 carts = new ArrayList<>();
             }
