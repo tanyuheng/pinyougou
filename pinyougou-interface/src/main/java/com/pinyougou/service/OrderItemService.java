@@ -26,7 +26,7 @@ public interface OrderItemService {
 	OrderItem findOne(Serializable id);
 
 	/** 查询全部 */
-	List<OrderItem> findAll();
+	List<OrderItem> findAll(Long orderId);
 
 	/** 多条件分页查询 */
 	List<OrderItem> findByPage(OrderItem orderItem, int page, int rows);

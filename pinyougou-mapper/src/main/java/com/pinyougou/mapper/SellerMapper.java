@@ -20,4 +20,8 @@ public interface SellerMapper extends Mapper<Seller>{
     /** 修改商家的审核状态 */
     @Update("UPDATE tb_seller SET STATUS = #{status} WHERE seller_id = #{sellerId}")
     void updateStatus(@Param("sellerId") String sellerId, @Param("status") String status);
+
+    /** 修改商家登录密码 */
+    @Update("UPDATE tb_seller SET password = #{password} WHERE seller_id = #{sellerId}")
+    void updatePassword(@Param("password")String password,@Param("sellerId")String sellerId);
 }

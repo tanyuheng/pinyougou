@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,17 +28,24 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public void save(Address address) {
+        try {
 
+            address.setIsDefault("0");
+            address.setCreateDate(new Date());
+            addressMapper.insertSelective(address);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void update(Address address) {
-
+        addressMapper.updateByPrimaryKeySelective(address);
     }
 
     @Override
     public void delete(Serializable id) {
-
+        addressMapper.deleteByPrimaryKey(id);
     }
 
     @Override
@@ -62,7 +70,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> findAddressByUser(String userId) {
-        try{
+        try {
             // SELECT * FROM `tb_address` WHERE user_id = 'itcast' ORDER BY is_default DESC
             // 创建Example对象
             Example example = new Example(Address.class);
@@ -75,8 +83,25 @@ public class AddressServiceImpl implements AddressService {
 
             // 条件查询
             return addressMapper.selectByExample(example);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void setDefault(Long id) {
+        Address address = addressMapper.selectByPrimaryKey(id);
+        address.setIsDefault("1");
+
+        Example example = new Example(Address.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isDefault", 1);
+        List<Address> addressList = addressMapper.selectByExample(example);
+        for (Address address1 : addressList) {
+            address1.setIsDefault("0");
+            addressMapper.updateByPrimaryKey(address1);
+        }
+
+        addressMapper.updateByPrimaryKey(address);
     }
 }

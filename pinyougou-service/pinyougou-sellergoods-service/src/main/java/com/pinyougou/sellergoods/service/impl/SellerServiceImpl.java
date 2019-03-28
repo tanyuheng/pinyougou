@@ -42,8 +42,10 @@ public class SellerServiceImpl implements SellerService {
         }
     }
 
+    /** 修改商家资料 */
     @Override
-    public void update(Seller seller) {
+    public void update(Seller seller,String sellerId) {
+        sellerMapper.updateByPrimaryKeySelective(seller);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public Seller findOne(Serializable id) {
+    public Seller findOne(String id) {
         return sellerMapper.selectByPrimaryKey(id);
     }
 
@@ -86,6 +88,16 @@ public class SellerServiceImpl implements SellerService {
     public void updateStatus(String sellerId, String status){
         try{
             sellerMapper.updateStatus(sellerId, status);
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+    /** 修改密码 */
+    public void updatePassword(String password,String sellerId){
+        try{
+            sellerMapper.updatePassword(password,sellerId);
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }

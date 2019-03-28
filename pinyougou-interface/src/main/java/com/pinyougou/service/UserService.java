@@ -44,5 +44,7 @@ public interface UserService {
 
     void updatePhoneNum(String username, String phone);
 
+    List<User> findUserInfo(String username);
+
 
 }

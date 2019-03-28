@@ -13,11 +13,13 @@ import com.pinyougou.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单服务接口实现类
@@ -215,6 +217,15 @@ public class OrderServiceImpl implements OrderService {
 
             // 3. 删除支付日志
             redisTemplate.delete("payLog_" + payLog.getUserId());
+        }catch (Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /* 查询用户订单 */
+    public List<Order> findOrderByUserId(String loginName){
+        try {
+            return orderMapper.selectOrder(loginName);
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }

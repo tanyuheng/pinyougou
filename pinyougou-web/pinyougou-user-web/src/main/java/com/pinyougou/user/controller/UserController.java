@@ -31,10 +31,7 @@ public class UserController {
        return userService.selectPhone(username);
     }
 
-
-
     //查询判断验证码
-
     @GetMapping("/code")
     public  boolean selectCode(String code,HttpServletRequest request){
         String oldCode = (String) request.getSession().getAttribute(VerifyController.VERIFY_CODE);
@@ -43,6 +40,7 @@ public class UserController {
       }
       return false;
     }
+
     //发送短信
     @GetMapping("/sms")
     public boolean sms ( String phone){
@@ -57,7 +55,6 @@ public class UserController {
     //修改密码
     @PostMapping("/safe")
     public boolean safe(@RequestBody User user){
-
         return userService.safe(user);
     }
 
@@ -102,6 +99,7 @@ public class UserController {
         }
         return false;
     }
+
     //更新手机号码
     @PostMapping("/nextNew")
     public boolean nextNew(@RequestBody User user ,String smsCode,HttpServletRequest request){
@@ -112,6 +110,30 @@ public class UserController {
             return ok;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return false;
+    }
+
+    //查询用户信息
+    @GetMapping("/findUserInfo")
+    public List<User> findUserInfo(HttpServletRequest request) {
+        try {
+            String username = request.getRemoteUser();
+            return userService.findUserInfo(username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //更新用户信息
+    @PostMapping("/update")
+    public boolean update(@RequestBody User user) {
+        try {
+            userService.update(user);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return false;
     }

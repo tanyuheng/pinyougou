@@ -116,4 +116,21 @@ app.controller('orderController', function ($scope, $controller, $interval,$loca
     $scope.getMoney = function () {
         return $location.search().money;
     };
+
+    /** 查询购物车数据 */
+    $scope.findSelectedCart = function (aa) {
+        baseService.sendGet("/cart/findCart", "prefix="+aa).then(function (response) {
+            $scope.carts = response.data;
+            // 定义总计对象
+            $scope.totalEntity = {totalNum : 0, totalMoney : 0};
+            for (var i = 0; i < $scope.carts.length; i++) {
+                var cart = $scope.carts[i];
+                for (var j = 0; j < cart.orderItems.length; j++) {
+                    var orderItem = cart.orderItems[j];
+                    $scope.totalEntity.totalNum += orderItem.num;
+                    $scope.totalEntity.totalMoney += orderItem.totalFee;
+                }
+            }
+        });
+    };
 });

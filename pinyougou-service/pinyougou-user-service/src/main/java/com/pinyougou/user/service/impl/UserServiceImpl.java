@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
-
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
             params.put("templateParam", "{'code':'"+ code +"'}");
             // 调用短信接口
             String content = httpClientUtils.sendPost(smsUrl, params);
-            System.out.println("content:"+content);
+            System.out.println(content);
 
             // 3. 如果发送成功，把验证码存储到Redis数据库
             Map map = JSON.parseObject(content, Map.class);
@@ -153,5 +153,18 @@ public class UserServiceImpl implements UserService {
             throw  new RuntimeException(e);
         }
     }
+
+    @Override
+    public List<User> findUserInfo(String username) {
+        try {
+            Example example = new Example(User.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username", username);
+            return userMapper.selectByExample(example);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
