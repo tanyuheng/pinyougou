@@ -18,4 +18,6 @@ public interface UserMapper extends Mapper<User>{
     void updatePassword( @Param("username") String username, @Param("password") String password);
     @Select("SELECT * FROM tb_user WHERE username = #{username}")
     User selectPhone(String username);
+    @Update("UPDATE tb_user set phone=#{phone} where username = #{username}")
+    void updatePhone( @Param("username")String username,@Param("phone") String phone);
 }

@@ -14,7 +14,7 @@
 	<script src="/js/controller/indexController.js"></script>
 	<script src="js/controller/userController.js"></script>
 </head>
-<body ng-app="pinyougou" ng-controller="userController" ng-init="showName();">
+<body ng-app="pinyougou" ng-controller="userController" ng-init="showName();" >
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -276,6 +276,7 @@ $(function(){
         return this.optional(element) || (isIDCard1.test(value)) || (isIDCard2.test(value));
         }, "格式不对");
     </script>
+
 </body>
     <!--header-->
     <div id="account">
@@ -331,7 +332,7 @@ $(function(){
                                         <label  class="control-label">用户名：</label>
                                         <div class="controls">
                                             <input id="pwdid" class="fn-tinput" data-rule-remote="http://www.baidu.com" type="username" placeholder="输入昵称"
-                                                required data-msg-required="请输入昵称" minlength="6" data-msg-minlength="至少输入6个字符" ng-model="safe.username"
+                                                required data-msg-required="请输入昵称" minlength="6" data-msg-minlength="至少输入6个字符" ng-model="safe.username"  ng-blur="ifUsername();"
                                             />
                                         </div>
                                     </div>
@@ -369,7 +370,7 @@ $(function(){
                                     </div>
                                     <div class="wrap">
                                         <div class="todo">
-                                        <label><span class="round">2</span><span>第二步 绑定新手机号</span></label><i class="triangle-right-bg"></i><i class="triangle-right"></i>
+                                        <label><span class="round">2</span><a ng-click="showName()">第二步 绑定新手机号</a> </label><i class="triangle-right-bg"></i><i class="triangle-right"></i>
                                         </div>
                                     </div>
                                     <div class="wrap">
@@ -385,12 +386,12 @@ $(function(){
 
                                     <div class="control-group">
                                         <label  class="control-label">验证方式：</label>
-                                        <div class="controls fixed">手机验证{{phone}}</div>
+                                        <div class="controls fixed">手机验证{{phoneNumber}}</div>
                                     </div>
                                      <div class="control-group">
                                         <label for="inputcode" class="control-label">验证码：</label>
                                         <div class="controls">
-                                            <input name="inputcode" type="text" id="inputcode" ng-model="code">
+                                            <input name="inputcode" type="text" id="inputcode" ng-model="code" ng-blur="selectCode();">
 
                                         </div>
                                         <div class="controls">
@@ -409,7 +410,7 @@ $(function(){
                                         </div>
                                     </div>
                                     <div class="control-group next-btn">
-                                        <a class="sui-btn btn-primary" href="home-setting-address-phone.html" ng-click="next">下一步</a>
+                                        <a class="sui-btn btn-primary"  ng-click="next();">下一步</a>
                                     </div>
                                 </form>
                             </div>

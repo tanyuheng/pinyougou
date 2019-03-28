@@ -41,4 +41,8 @@ public interface UserService {
 	boolean safe(User user);
 
     User selectPhone(String uername);
+
+    void updatePhoneNum(String username, String phone);
+
+
 }
