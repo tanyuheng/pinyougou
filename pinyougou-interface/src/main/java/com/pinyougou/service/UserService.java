@@ -39,7 +39,11 @@ public interface UserService {
 
     User findUserInfo(User user);
 
-//	/** 查询用户iD */
-//    User findUser(String loginName);
+	boolean safe(User user);
+
+    User selectPhone(String uername);
+
+    void updatePhoneNum(String username, String phone);
+
 
 }
