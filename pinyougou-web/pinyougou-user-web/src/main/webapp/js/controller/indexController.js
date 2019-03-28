@@ -107,3 +107,7 @@ app.controller('indexController', function($scope, baseService){
         }
     };
 });
+
+
+
+//整合
