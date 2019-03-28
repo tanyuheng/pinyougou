@@ -1,7 +1,7 @@
 /** 定义控制器层 */
-app.controller('userController', function ($scope, $timeout, $controller, baseService) {
+app.controller('userController', function ($scope, $timeout, baseService) {
 
-    $controller('baseController', {$scope: $scope});
+
     // 定义json对象
     $scope.user = {}
 

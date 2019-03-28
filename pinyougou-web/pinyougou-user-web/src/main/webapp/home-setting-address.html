@@ -11,13 +11,13 @@
 	<script src="/plugins/angularjs/angular.min.js"></script>
 	<script src="/js/base.js"></script>
 	<script src="/js/service/baseService.js"></script>
-	<script src="/js/controller/baseController.js"></script>
-	<script src="/js/controller/userController.js"></script>
+	<!--<script src="/js/controller/baseController.js"></script>-->
+	<script src="/js/controller/userController.js"></script	>
 	<script src="/js/controller/addressController.js"></script>
 </head>
 <body ng-app="pinyougou"
 	  ng-controller="addressController"
-	  ng-init="loadUsername();findProvince();findCitie();findArea();findAddressByUser();">
+	  ng-init="loadUsername();findAddressByUser();findProvince();parseJson(user.address);">
     <!-- 头部栏位 -->
     <!--页面顶部-->
 <div id="nav-bottom">
@@ -261,33 +261,40 @@ $(function(){
                                                 <input type="text" class="input-medium" ng-model="item.contact">
                                             </div>
                                         </div>
-                                        <div class="control-group">
-                                            <label class="control-label">所在地区：</label>
-                                            <div class="controls">
-                                                <div data-toggle="distpicker">
-                                                <div class="form-group area">
-                                                    <select class="form-control" id="province1"
-															ng-model="item.province_id"
-															ng-options="c.province as c.province for c in provinceList"
-															></select>
-                                                </div>
-                                                <div class="form-group area">
-                                                    <select class="form-control" id="city1"
-															ng-model="item.city_id"
-															ng-options="c.city as c.city for c in citieList"></select>
-                                                </div>
-                                                <div class="form-group area">
-                                                    <select class="form-control" id="district1"
-															ng-model="item.town_id"
-															ng-options="c.area as c.area for c in areaList"></select>
-                                                </div>
-                                            </div>
-                                            </div>									 
-                                        </div>
+
+											<div class="control-group">
+												<label class="control-label">所在地：</label>
+
+												<table>
+													<tr>
+														<td>
+															<select ng-model="item.provinceId"
+																	ng-options="i.provinceId as i.province for i in provinceList"
+																	class="form-control">
+																<option value="">==请选择省份==</option>
+															</select>
+														</td>
+														<td>
+															<select ng-model="item.cityId"
+																	ng-options="i.cityId as i.city for i in cityList"
+																	class="form-control select-sm">
+																<option value="">==请选择市==</option>
+															</select>
+														</td>
+														<td>
+															<select ng-model="item.townId"
+																	ng-options="i.areaId as i.area for i in townList"
+																	class="form-control select-sm">
+																<option value="">==请选择区==</option>
+															</select>
+														</td>
+													</tr>
+												</table>
+											</div>
                                         <div class="control-group">
                                             <label class="control-label">详细地址：</label>
                                             <div class="controls">
-                                                <input type="text" class="input-large" ng-model="item.address">
+                                              <input type="text" class="input-large" ng-model="item.address">
                                             </div>
                                         </div>
                                         <div class="control-group">

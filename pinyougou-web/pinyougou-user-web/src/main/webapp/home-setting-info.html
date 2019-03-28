@@ -4,26 +4,28 @@
     <meta charset="UTF-8"/>
     <title>设置-个人信息</title>
     <link rel="icon" href="/assets/img/favicon.ico"/>
-
     <link rel="stylesheet" type="text/css" href="/css/webbase.css"/>
-
     <link rel="stylesheet" type="text/css" href="/css/pages-seckillOrder.css"/>
+    <!--<script src="/plugins/angularjs/angular.min.js"></script>-->
+    <!--<script src="/js/base.js"></script>-->
+    <!--<script src="/js/service/baseService.js"></script>-->
+    <!--<script src="/js/controller/settingInfoController.js"></script>-->
     <script src="/plugins/angularjs/angular.min.js"></script>
     <script src="/js/base.js"></script>
     <script src="/js/service/baseService.js"></script>
     <script src="/js/controller/baseController.js"></script>
-    <script src="/js/controller/userController.js"></script>
-    <script src="/js/controller/indexController.js"></script>
-    <script src="/js/controller/addressController.js"></script>
-    <script language="javascript" type="text/javascript" src="/js/My97DatePicker/WdatePicker.js"></script>
-</head>
+    <script src="/js/controller/us  erController.js"></script>
+    <script src="/js/controller/settingInfoController.js"></script>
+    <script src="/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="/js/My97DatePicker/getVaule.js"></script>
 
-<body ng-app="pinyougou"
-      ng-controller="addressController"
-      ng-init="loadUsername();findUserInfo();findProvince();findCitie();findArea()">
+
+<body ng-app="pinyougou" ng-controller="settingInfoController"
+      ng-init="loadUsername();findProvince('',user.address.province);parseJson(user.address);">
 <!-- 头部栏位 -->
 <!--页面顶部-->
 <div id="nav-bottom">
+
     <!--顶部-->
     <div class="nav-top">
         <div class="top">
@@ -66,6 +68,7 @@
                 </div>
             </div>
         </div>
+
 
         <!--头部-->
         <div class="header">
@@ -165,37 +168,30 @@
 
 <script type="text/javascript" src="/js/plugins/birthday/birthday.js"></script>
 
-<script type="text/javascript" src="/js/plugins/citypicker/distpicker.data.js"></script>
+<!--地址选项-->
+<!--<script type="text/javascript" src="/js/plugins/citypicker/distpicker.data.js"></script>-->
 
-<script type="text/javascript" src="/js/plugins/citypicker/distpicker.js"></script>
+<!--<script type="text/javascript" src="/js/plugins/citypicker/distpicker.js"></script>-->
 
 <script type="text/javascript" src="/js/plugins/upload/uploadPreview.js"></script>
 
 <script type="text/javascript" src="/js/pages/main.js"></script>
 
-<script>
-    $(function () {
-        $.ms_DatePicker({
-            YearSelector: "#select_year2",
-            MonthSelector: "#select_month2",
-            DaySelector: "#select_day2"
-        });
-    });
-</script>
-
 </body>
 <!--header-->
 <div id="account">
-    <div class="py-container" ng-repeat="entity in dataList">
+    <div class="py-container">
         <div class="yui3-g home">
             <!--左侧列表-->
             <div class="yui3-u-1-6 list">
 
                 <div class="person-info">
-                    <div class="person-photo"><img src="{{entity.headPic}}" width="60" height="60" alt=""></div>
+                    <div class="person-photo"><img src="{{user.headPic}}" width="75" height="100" alt=""></div>
                     <div class="person-account">
-                        <span class="name">Michelle</span>
-                        <span class="safe">账户安全</span>
+                        <div class="person-account">
+                            <span class="name"><b>{{user.username}}</b></span>
+                            <span class="safe">账户安全</span>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -218,8 +214,7 @@
                     </dl>
                     <dl>
                         <dt><i>·</i> 设置</dt>
-                        <dd><a href="home-setting-info.html" class="list-active"
-                               ng-click="show(entity);">个人信息</a></dd>
+                        <dd><a href="home-setting-info.html" class="list-active" ng-click="parseJson(user)">个人信息</a></dd>
                         <dd><a href="home-setting-address.html">地址管理</a></dd>
                         <dd><a href="home-setting-safe.html">安全管理</a></dd>
                     </dl>
@@ -234,96 +229,74 @@
                     </ul>
                     <div class="tab-content ">
                         <div id="one" class="tab-pane active">
+                            <!-- 用户信息提交表单 -->
                             <form id="form-msg" class="sui-form form-horizontal">
                                 <div class="control-group">
                                     <label for="inputName" class="control-label">昵称：</label>
                                     <div class="controls">
-                                        <input type="text" id="inputName" name="email" placeholder="昵称"
-                                               ng-model="entity.nickName">
+                                        <input type="text" id="inputName" name="email" ng-model="user.nickName"
+                                               placeholder="昵称">
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label for="inputGender" class="control-label">性别：</label>
+                                    <label class="control-label">性别：</label>
                                     <div class="controls">
-                                        <!--class="radio-pretty inline"-->
-                                        <label data-toggle="radio">
-                                            <input type="radio" name="gender" value="1" ng-true-value="1"
-                                                   ng-false-value="2"
-                                                   ng-checked="entity.sex == 1" ng-click="selectStatus($event);"/>
-                                            <span>男</span>
-                                        </label>
-                                        <!--class="radio-pretty inline"-->
-                                        <label data-toggle="radio">
-                                            <input type="radio" name="gender" value="2" ng-true-value="1"
-                                                   ng-false-value="2"
-                                                   ng-checked="entity.sex == 2"><span>女</span>
-                                        </label>
+                                        <input type="radio" value="1" ng-model="user.sex"><span>男</span>
+                                        <input type="radio" value="2" ng-model="user.sex"><span>女</span>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label for="inputPassword" class="control-label">生日：</label>
+                                    <label class="control-label">生日：</label>
                                     <div class="controls">
-
-                                        <input class="Wdate" type="text" onClick="WdatePicker()"
-                                        ng-model="entity.birthday | date:'yyyy-MM-dd'"> <font color=red></font>
-
+                                        <input ng-model="user.birthday" id="dcsj" type="text"
+                                               class="power-from-control power-input-date" power-date-picker/>
                                     </div>
                                 </div>
 
+                                <!--地址-->
+                                <div class="control-group">
+                                    <label class="control-label">所在地：</label>
+
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <select ng-model="user.address.province"
+                                                        ng-options="i.provinceId as i.province for i in provinceList"
+                                                        class="form-control">
+                                                    <option value="">==请选择省份==</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select ng-model="user.address.city"
+                                                        ng-options="i.cityId as i.city for i in cityList"
+                                                        class="form-control select-sm">
+                                                    <option value="">==请选择市==</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select ng-model="user.address.area"
+                                                        ng-options="i.areaId as i.area for i in areaList"
+                                                        class="form-control select-sm">
+                                                    <option value="">==请选择地区==</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- 职业 -->
+                                <div class="control-group">
+                                    <label class="control-label">职业：</label>
+                                    <div class="controls">
+                                        <select ng-model="user.job" class="form-control"
+                                                ng-options="act for act in activities"></select>
+                                    </div>
+                                </div>
 
                                 <div class="control-group">
-                                    <label for="inputPassword" class="control-label">所在地：</label>
+                                    <label class="control-label"></label>
                                     <div class="controls">
-                                        <div data-toggle="distpicker">
-                                            <div class="form-group area">
-                                                <select class="form-control" id="province1"
-                                                        ng-model="entity.address.province"
-                                                        ng-options="c.id as c.province for c in provinceList"
-                                                        ></select>
-                                            </div>
-                                            <div class="form-group area">
-                                                <select class="form-control" id="city1"
-                                                        ng-model="entity.address.city"
-                                                        ng-options="c.id as c.city for c in citieList"
-                                                       ></select>
-                                            </div>
-                                            <div class="form-group area">
-                                                <select class="form-control" id="district1"
-                                                        ng-model="entity.address.area"
-                                                        ng-options="c.id as c.area for c in areaList"
-                                                        class="form-control"></select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label for="inputJob" class="control-label">职业：</label>
-                                    <div class="controls"><span class="sui-dropdown dropdown-bordered select"><span
-                                            class="dropdown-inner"><a role="button" data-toggle="dropdown" href="#"
-                                                                      class="dropdown-toggle">
-                                                <input name="job" type="hidden" data-rules="required"><i
-                                            class="caret"></i><span>请选择</span></a>
-                                            <ul id="menu4" role="menu" aria-labelledby="drop4"
-                                                class="sui-dropdown-menu">
-                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                           href="javascript:void(0);" value="bj">程序员</a></li>
-                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                           href="javascript:void(0);"
-                                                                           value="sb">产品经理</a></li>
-                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                           href="javascript:void(0);"
-                                                                           value="sb">UI设计师</a></li>
-                                            </ul>
-                                            </span>
-                                            </span>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label for="sanwei" class="control-label"></label>
-                                    <div class="controls">
-                                        <button type="submit" class="sui-btn btn-primary"
-                                                ng-click="saveOrUpdate();">保存
-                                        </button>
+                                        <input value="保存" type="button" ng-click="updateDetail();">
                                     </div>
                                 </div>
                             </form>
@@ -333,12 +306,19 @@
                             <div class="new-photo">
                                 <p>当前头像：</p>
                                 <div class="upload">
-                                    <img id="imgShow_WU_FILE_0" width="100" height="100" src="{{entity.headPic}}"
-                                         alt="" ng-model="entity.headPic">
-                                    <input type="file" id="up_img_WU_FILE_0"/></br></br>
-                                    <button class="btn btn-primary"
-                                            ng-click="upload()"
-                                            type="button">上传</button>
+                                    <!-- 原来的头像地址 img/_/photo_icon.p-->
+                                    <table>
+                                        <tr>
+                                            <td><img src="{{user.headPic}}" width="200px" height="200px"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="file" id="file"/>
+                                                <button ng-click="upload();"
+                                                        class="btn btn-primary" type="button">上传
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
 
                             </div>
@@ -483,4 +463,4 @@
     </div>
 </div>
 <!--页面底部END-->
-</html>
+</head></html>

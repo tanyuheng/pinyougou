@@ -49,6 +49,7 @@ app.service('baseService', function($http){
     };
 
     /** 定义文件异步上传的方法 */
+    /** 定义文件异步上传的方法 */
     this.uploadFile = function(){
         // 创建表单数据对象
         var formData = new FormData();

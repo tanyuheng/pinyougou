@@ -102,4 +102,12 @@ public class AreasServiceImpl implements AreasService {
 		}
 	}
 
+	@Override
+	public List<Areas> findAreasByCityId(Long cityId) {
+		Example example = new Example(Areas.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("cityId", cityId);
+		return areasMapper.selectByExample(example);
+	}
+
 }

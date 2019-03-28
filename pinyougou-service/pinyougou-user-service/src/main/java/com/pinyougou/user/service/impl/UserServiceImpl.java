@@ -135,12 +135,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findUserInfo(String username) {
+    public User findUserInfo(User user) {
         try {
-            Example example = new Example(User.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("username", username);
-            return userMapper.selectByExample(example);
+            return userMapper.selectOne(user);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

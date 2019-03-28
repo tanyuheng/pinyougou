@@ -54,11 +54,13 @@ public class UserController {
     }
 
     //查询用户信息
-    @GetMapping("/findUserInfo")
-    public List<User> findUserInfo(HttpServletRequest request) {
+    @GetMapping("/finduserInfo")
+    public User findUserInfo(HttpServletRequest request) {
         try {
             String username = request.getRemoteUser();
-            return userService.findUserInfo(username);
+            User user=new User();
+            user.setUsername(username);
+            return userService.findUserInfo(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
