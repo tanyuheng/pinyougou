@@ -38,5 +38,13 @@ public interface UserService {
 	boolean checkSmsCode(String phone, String code);
 
 
+	boolean safe(User user);
+
+    User selectPhone(String uername);
+
+    void updatePhoneNum(String username, String phone);
+
+    List<User> findUserInfo(String username);
+
 
 }

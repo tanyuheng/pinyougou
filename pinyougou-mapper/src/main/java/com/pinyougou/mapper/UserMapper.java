@@ -1,6 +1,8 @@
 package com.pinyougou.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import tk.mybatis.mapper.common.Mapper;
 
 import com.pinyougou.pojo.User;
@@ -12,4 +14,10 @@ import com.pinyougou.pojo.User;
  */
 public interface UserMapper extends Mapper<User>{
 
+    @Update("UPDATE tb_user set password=#{password} where username=#{username}")
+    void updatePassword( @Param("username") String username, @Param("password") String password);
+    @Select("SELECT * FROM tb_user WHERE username = #{username}")
+    User selectPhone(String username);
+    @Update("UPDATE tb_user set phone=#{phone} where username = #{username}")
+    void updatePhone( @Param("username")String username,@Param("phone") String phone);
 }

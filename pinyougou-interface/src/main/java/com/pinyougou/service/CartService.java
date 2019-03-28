@@ -25,7 +25,7 @@ public interface CartService {
      * @param userId 用户id
      * @return 购物车集合
      */
-    List<Cart> findCartRedis(String userId);
+    List<Cart> findCartRedis(String userId, String prefix);
 
     /**
      * 把用户的购物车存储到Redis数据库
@@ -41,4 +41,6 @@ public interface CartService {
      * @return 合并后的购物车
      * */
     List<Cart> mergeCart(List<Cart> cookieCarts, List<Cart> redisCarts);
+
+
 }

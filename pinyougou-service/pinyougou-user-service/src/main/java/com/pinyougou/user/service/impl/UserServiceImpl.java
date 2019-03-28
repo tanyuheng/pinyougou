@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.util.*;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(User user) {
-
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class UserServiceImpl implements UserService {
             params.put("phone", phone);
             params.put("signName", signName);
             params.put("templateCode", templateCode);
-            params.put("templateParam", "{'number':'"+ code +"'}");
+            params.put("templateParam", "{'code':'"+ code +"'}");
             // 调用短信接口
             String content = httpClientUtils.sendPost(smsUrl, params);
             System.out.println(content);
@@ -128,5 +129,42 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(ex);
         }
     }
+    public   boolean safe(User user){
+        try {
+         String username=   user.getUsername();
+          String password= DigestUtils.md5Hex(user.getPassword());
+         userMapper.updatePassword(username,password);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public User selectPhone(String username){
+        try {
+       return   userMapper.selectPhone(username);
+        } catch (Exception e) {
+            throw  new RuntimeException(e);
+        }
+    }
+    public void updatePhoneNum(String username, String phone){
+        try {
+            userMapper.updatePhone(username,phone);
+        } catch (Exception e) {
+            throw  new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<User> findUserInfo(String username) {
+        try {
+            Example example = new Example(User.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("username", username);
+            return userMapper.selectByExample(example);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
