@@ -1,14 +1,13 @@
 package com.pinyougou.order.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.pinyougou.cart.Cart;
 import com.pinyougou.common.util.IdWorker;
-import com.pinyougou.mapper.OrderItemMapper;
-import com.pinyougou.mapper.OrderMapper;
-import com.pinyougou.mapper.PayLogMapper;
-import com.pinyougou.pojo.Order;
-import com.pinyougou.pojo.OrderItem;
-import com.pinyougou.pojo.PayLog;
+import com.pinyougou.mapper.*;
+import com.pinyougou.pojo.*;
 import com.pinyougou.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,9 +16,9 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.sun.tools.doclint.Entity.or;
 
 /**
  * 订单服务接口实现类
@@ -42,6 +41,12 @@ public class OrderServiceImpl implements OrderService {
     private PayLogMapper payLogMapper;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private SellerMapper sellerMapper;
+    @Autowired
+    private ItemMapper itemMapper;
+
+
 
     @Override
     public void save(Order order) {
@@ -223,11 +228,81 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /* 查询用户订单 */
-    public List<Order> findOrderByUserId(String loginName){
+    public Map<String,Object> findAllOrder(String userId,Integer pageNum,Integer size) {
         try {
-            return orderMapper.selectOrder(loginName);
-        }catch (Exception ex){
+            Map<String,Object> map = new HashMap<>();
+            PageInfo<Order> pageInfo = PageHelper.startPage(pageNum, size).doSelectPageInfo(new ISelect() {
+                @Override
+                public void doSelect() {
+                    Example example = new Example(Order.class);
+                    example.createCriteria().andEqualTo("userId", userId);
+                    List<Order> orders = orderMapper.selectByExample(example);
+                    for (Order order : orders) {
+                        Seller seller = sellerMapper.selectByPrimaryKey(order.getUserId());
+                        order.setSeller(seller);
+
+//                        封装订单详情
+                        Example orderItemExample = new Example(OrderItem.class);
+                        orderItemExample.createCriteria().andEqualTo("orderId", order.getOrderId());
+                        List<OrderItem> orderItems = orderItemMapper.selectByExample(orderItemExample);
+
+//                        封装订单详情规格
+                        for (OrderItem orderItem : orderItems) {
+                            Example itemExample = new Example(Item.class);
+                            itemExample.createCriteria().andEqualTo("id", orderItem.getItemId());
+                            List<Item> items = itemMapper.selectByExample(itemExample);
+                            orderItem.setItem(items.get(0));
+                        }
+                        order.setOrderItemList(orderItems);
+
+                    }
+                }
+            });
+            map.put("rows", pageInfo.getList());
+            map.put("total", pageInfo.getTotal());
+            map.put("totalPages", pageInfo.getPages());
+            return map;
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
     }
+
+    /*生成单个订单的支付日志并保存在Redis*/
+    @Override
+    public void pay(Long orderId) {
+        Order order = orderMapper.selectByPrimaryKey(orderId);
+        // 创建支付日志对象
+        PayLog payLog = new PayLog();
+        // 交易订单号
+        payLog.setOutTradeNo(String.valueOf(idWorker.nextId()));
+        // 创建时间
+        payLog.setCreateTime(new Date());
+        // 订单总金额 (分)
+        payLog.setTotalFee((long)(order.getPayment().doubleValue() * 100));
+        // 用户id
+        payLog.setUserId(order.getUserId());
+        // 支付状态
+        payLog.setTradeState("0");
+        // 关联订单id
+        payLog.setOrderList(""+orderId);
+        // 支付类型
+        payLog.setPayType(order.getPaymentType());
+        // 插入数据
+        payLogMapper.insertSelective(payLog);
+        // 为了生成支付二维码方便(把支付日志对象存储到Redis数据库)
+        redisTemplate.boundValueOps("payLog_" + orderId).set(payLog);
+    }
+
+
+
+    //用户取消订单,设置订单关闭时间
+    @Override
+    public void closeOrderByOrderId(Long orderId) {
+        Order order = new Order();
+        order.setOrderId(orderId);
+        order.setCloseTime(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+    }
+
+
 }

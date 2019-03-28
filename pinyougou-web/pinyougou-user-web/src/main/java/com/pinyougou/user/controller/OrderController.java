@@ -1,45 +1,56 @@
 package com.pinyougou.user.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.pojo.Order;
-import com.pinyougou.pojo.OrderItem;
-import com.pinyougou.pojo.User;
-import com.pinyougou.service.OrderItemService;
 import com.pinyougou.service.OrderService;
-import com.pinyougou.service.UserService;
-import org.springframework.security.core.context.SecurityContext;
+import com.pinyougou.service.WeixinPayService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/order")
 public class OrderController {
-    @Reference
-    private OrderService orderService ;
-    @Reference
-    private UserService userService ;
-    @Reference
-    private OrderItemService orderItemService ;
-    @GetMapping("/findOrder")
-    public Map<String ,Object> findOrder (){
-        SecurityContext context = SecurityContextHolder.getContext();
-        String loginName = context.getAuthentication().getName();
-        List<Order> orders = orderService.findOrderByUserId(loginName);
+    @Reference(timeout = 10000)
+    private OrderService orderService;
+    @Reference(timeout = 10000)
+    private WeixinPayService weixinPayService;
 
-        List<OrderItem> orderItems =null;
-        for (Order order : orders) {
-            Long orderId = order.getOrderId();
-            orderItems = orderItemService.findAll(orderId);
-        }
-        Map<String,Object> data = new HashMap<>();
-        data.put("orderItems",orderItems);
-        data.put("orders", orders);
+    @GetMapping("/findOrder")
+    public Map<String, Object> findAllOrderByUserId(@RequestParam(defaultValue = "1") Integer pageNum, @RequestParam(defaultValue = "2") Integer size) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map<String, Object> data = orderService.findAllOrder(userId, pageNum, size);
         return data;
     }
+
+    /*生成单个订单的支付日志并保存在Redis,并返回支付流水单号*/
+    @GetMapping("/pay")
+    public boolean pay(Long orderId){
+        try {
+            orderService.pay(orderId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /*用户关闭订单*/
+    @RequestMapping("/closeOrder")
+    public Boolean closeOrder(Long orderId){
+        try {
+            orderService.closeOrderByOrderId(orderId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
 }

@@ -1,5 +1,8 @@
 package com.pinyougou.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -9,7 +12,7 @@ import javax.persistence.*;
 public class OrderItem implements Serializable{
   
 	private static final long serialVersionUID = -1486894002218647239L;
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY) @JSONField(serializeUsing= ToStringSerializer.class)
 	@Column(name="id")
 	private Long id;
 	@Column(name="item_id")
@@ -30,6 +33,16 @@ public class OrderItem implements Serializable{
     private String picPath;
 	@Column(name="seller_id")
     private String sellerId;
+    @Transient
+    private Item item;
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 
     public Long getId() {
         return id;

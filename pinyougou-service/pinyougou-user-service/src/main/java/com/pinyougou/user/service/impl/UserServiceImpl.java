@@ -129,12 +129,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    @Override
-//    public User findUser(String loginName) {
-//        try{
-//            return userMapper.findUser(loginName);
-//        }catch (Exception ex){
-//            throw new RuntimeException(ex);
-//        }
-//    }
 }

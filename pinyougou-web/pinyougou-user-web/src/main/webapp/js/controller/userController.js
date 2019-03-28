@@ -2,7 +2,7 @@
 app.controller('userController', function($scope, $timeout, baseService){
 
     // 定义json对象
-    $scope.user = {}
+    $scope.user = {};
 
     // 用户注册
     $scope.save = function () {
