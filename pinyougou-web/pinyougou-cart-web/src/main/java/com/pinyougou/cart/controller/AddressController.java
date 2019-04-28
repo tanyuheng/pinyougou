@@ -32,6 +32,8 @@ public class AddressController {
         // 查询收件地址
 
         System.out.println("xxxxxxxxxxx");
+        System.out.println("xxxxxxxxxxx");
+        System.out.println("xxxxxxxxxxx");
         return addressService.findAddressByUser(userId);
 
     }
