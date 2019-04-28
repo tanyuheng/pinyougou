@@ -30,13 +30,7 @@ public class AddressController {
         // 获取登录用户名
         String userId = request.getRemoteUser();
         // 查询收件地址
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
-        System.out.println("xxxxxxxxxxx");
+
         System.out.println("xxxxxxxxxxx");
         return addressService.findAddressByUser(userId);
 
